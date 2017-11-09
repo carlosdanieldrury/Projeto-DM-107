@@ -23,8 +23,11 @@ public class AuthenticationService {
 		final String username = usernameAndPassSplit[0];
 		final String password = usernameAndPassSplit[1];
 
-		
-		boolean authenticationStatus = "eu".equals(username) && "eu".equals(password);
+		// usuario: usuario
+		// senha: senha
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		boolean authenticationStatus = usuarioDAO.checkLogin(username, password);
+		System.out.println(String.valueOf(authenticationStatus));
 		return authenticationStatus;
 	}
 }

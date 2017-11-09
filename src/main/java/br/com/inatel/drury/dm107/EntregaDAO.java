@@ -1,6 +1,7 @@
 package br.com.inatel.drury.dm107;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,7 +12,7 @@ public class EntregaDAO {
 	
 	private Connection conn = null;
 	
-	public EntregaDAO(){
+	public EntregaDAO() {
 		if (conn == null) {
 			try {
 				this.conn = new ConnectionFactory().getConnection();
@@ -20,38 +21,9 @@ public class EntregaDAO {
 			}
 		}
 	}
-	
-	public boolean checkLogin(String userName, String passWord)
-	{
-
-		boolean exists = false;
-		int countUsers=0;
 		
-		String sql ="select count(*) as countUsers from dm107users where"
-				+ " user_name='"+userName+"' and password='"+passWord+"'";
-		
-		try(Statement sttm = conn.createStatement();
-			ResultSet  rs = sttm.executeQuery(sql);) {
-
-			while(rs.next()){
-				countUsers = rs.getInt("countUsers");
-			}
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(countUsers>0){
-			exists= true;
-		}
-		
-		return exists;
-	}
-	
 	public List<EntregaEntity> list() throws SQLException {
-		String sql = "SELECT *FROM entrega";
+		String sql = "SELECT * FROM entrega";
 		Statement stm = conn.createStatement();
 		ResultSet rs = stm.executeQuery(sql);
 		EntregaEntity entrega = null;
@@ -64,7 +36,7 @@ public class EntregaDAO {
 			entrega.setIdCliente(rs.getInt("idCliente"));
 			entrega.setNomeRecebedor(rs.getString("nomeRecebedor"));
 			entrega.setCpfRecebedor(rs.getString("cpfRecebedor"));
-			entrega.setDataHoraEntrega(rs.getDate("dataHoraEntrega"));
+			//entrega.setDataHoraEntrega(rs.getDate("dataHoraEntrega"));
 			entregas.add(entrega);
 		}
 		return entregas;
@@ -83,17 +55,29 @@ public class EntregaDAO {
 			entrega.setIdCliente(rs.getInt("idCliente"));
 			entrega.setNomeRecebedor(rs.getString("nomeRecebedor"));
 			entrega.setCpfRecebedor(rs.getString("cpfRecebedor"));
-			entrega.setDataHoraEntrega(rs.getDate("dataHoraEntrega"));
+			//entrega.setDataHoraEntrega(rs.getDate("dataHoraEntrega"));
 		}
 		
 		return entrega;
 	}
 	
-	public EntregaEntity insertEntrega (EntregaEntity entrega) throws SQLException {
-
+	public boolean insertEntrega (EntregaEntity entrega) throws SQLException {
+		System.out.println("Insert Entrega");
+		String sql = "INSERT INTO entrega (id, NumeroPedido, idCliente) VALUES (NULL, ?, ?)";
+		PreparedStatement pstm;
+		pstm = conn.prepareStatement(sql);
+		pstm.setInt(1, entrega.getNumeroPedido());
+		pstm.setInt(2, entrega.getIdCliente());
+//		pstm.setString(3, entrega.getNomeRecebedor());
+//		pstm.setString(4, entrega.getCpfRecebedor());
+//		pstm.setDate(2, entrega.getDataHoraEntrega());
+		boolean result = pstm.execute();
 		
-		return entrega;
-
+		
+		if (result) {
+			return true;
+		}
+		return false;
 	}
 		
 	public EntregaEntity updateItem (EntregaEntity entityToUpdate) {
@@ -103,11 +87,9 @@ public class EntregaDAO {
 		return entityToUpdate;
 	}
 		
-	public long getLastIdInserted() throws SQLException
-	{
+	public long getNextFreeId() throws SQLException {
 		long id=0;
-		String sql = "select max(id)+1 as nextid from delivery";
-		
+		String sql = "select max(id)+1 as nextid from entrega";
 
 		Statement stm = conn.createStatement();
 		ResultSet rs = stm.executeQuery(sql);

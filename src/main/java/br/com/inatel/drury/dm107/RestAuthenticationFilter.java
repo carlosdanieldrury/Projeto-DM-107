@@ -29,6 +29,8 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 
 			if (authenticationStatus) {
 				filter.doFilter(request, response);
+				System.out.println("Request " + request.toString());
+				System.out.println("Response " + response.toString());
 			} else {
 				if (response instanceof HttpServletResponse) {
 					HttpServletResponse httpServletResponse = (HttpServletResponse) response;

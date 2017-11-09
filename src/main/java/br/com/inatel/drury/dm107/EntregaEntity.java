@@ -1,6 +1,7 @@
 package br.com.inatel.drury.dm107;
 
 import java.sql.Date;
+import java.util.Calendar;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,17 +21,6 @@ public class EntregaEntity {
 	
 	public EntregaEntity() {
 		
-	}
-
-	public EntregaEntity(int id, int numeroPedido, int idCliente, String nomeRecebedor, String cpfRecebedor,
-			Date dataHoraEntrega) {
-		super();
-		this.id = id;
-		this.numeroPedido = numeroPedido;
-		this.idCliente = idCliente;
-		this.nomeRecebedor = nomeRecebedor;
-		this.cpfRecebedor = cpfRecebedor;
-		this.dataHoraEntrega = dataHoraEntrega;
 	}
 
 	public int getId() {
