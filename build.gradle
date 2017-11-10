@@ -7,7 +7,6 @@
  */
 
 // Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
 apply plugin: 'java'
 apply plugin: 'war'
 //Using the gretty plugin to be able to use jetty server embedded

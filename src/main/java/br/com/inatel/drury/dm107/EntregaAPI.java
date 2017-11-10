@@ -34,7 +34,6 @@ public class EntregaAPI {
 			GenericEntity<List<EntregaEntity>> entities = new GenericEntity<List<EntregaEntity>>(entregas) {};
 			return Response.status(Status.OK).entity(entities).build();
 		} catch (Exception e) {
-			System.out.println("GET EXCEPTION = ");
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -53,7 +52,6 @@ public class EntregaAPI {
 			GenericEntity<EntregaEntity> entities = new GenericEntity<EntregaEntity>(entrega) {};
 			return Response.status(Status.OK).entity(entities).build();
 		} catch (Exception e) {
-			System.out.println("GET EXCEPTION = ");
 			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
@@ -72,13 +70,10 @@ public class EntregaAPI {
 			entrega.setIdCliente(clienteId);
 			entrega.setNumeroPedido(numeroPedido);
 			entregaDAO.insertEntrega(entrega);
-			System.out.println("Terminou insert");
 			GenericEntity entity = new GenericEntity<EntregaEntity>(entrega){};
 			return Response.status(Status.CREATED).entity(entity).build();
 		} catch (Exception e) {
-			System.out.println("INSERT EXCEPTION = ");
 			e.printStackTrace();
-			// TODO Auto-generated catch block
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -95,7 +90,7 @@ public class EntregaAPI {
 			GenericEntity entity = new GenericEntity<EntregaEntity>(entrega){};
 			return Response.status(Status.CREATED).entity(entity).build();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -108,11 +103,13 @@ public class EntregaAPI {
 		
 		EntregaDAO entregaDAO = new EntregaDAO();
 		try {
-			entregaDAO.delete(numeroPedido);
-			
-			return Response.status(Status.OK).build();
+			boolean result = entregaDAO.delete(numeroPedido);
+			System.out.println("");
+			if (result)
+				return Response.status(Status.OK).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 		}
 	}

@@ -36,7 +36,7 @@ public class EntregaDAO {
 			entrega.setIdCliente(rs.getInt("idCliente"));
 			entrega.setNomeRecebedor(rs.getString("nomeRecebedor"));
 			entrega.setCpfRecebedor(rs.getString("cpfRecebedor"));
-			//entrega.setDataHoraEntrega(rs.getDate("dataHoraEntrega"));
+			entrega.setDataHoraEntrega(rs.getDate("dataEntrega"));
 			entregas.add(entrega);
 		}
 		return entregas;
@@ -55,7 +55,7 @@ public class EntregaDAO {
 			entrega.setIdCliente(rs.getInt("idCliente"));
 			entrega.setNomeRecebedor(rs.getString("nomeRecebedor"));
 			entrega.setCpfRecebedor(rs.getString("cpfRecebedor"));
-			//entrega.setDataHoraEntrega(rs.getDate("dataHoraEntrega"));
+			entrega.setDataHoraEntrega(rs.getDate("dataEntrega"));
 		}
 		
 		return entrega;
@@ -80,11 +80,25 @@ public class EntregaDAO {
 		return false;
 	}
 		
-	public EntregaEntity updateItem (EntregaEntity entityToUpdate) {
+	public EntregaEntity updateItem (EntregaEntity entityToBeUpdated) throws SQLException {
+		String sql = "UPDATE entrega SET numeroPedido=?, idCliente=?, nomeRecebedor=?, cpfRecebedor=?, dataEntrega=? WHERE id=?";
+
+		PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setInt(1, entityToBeUpdated.getNumeroPedido());
+		statement.setInt(2, entityToBeUpdated.getIdCliente());
+		statement.setString(3, entityToBeUpdated.getNomeRecebedor());
+		statement.setString(4, entityToBeUpdated.getCpfRecebedor());
+		statement.setDate(5, entityToBeUpdated.getDataHoraEntrega());
+		statement.setInt(6, entityToBeUpdated.getId());
+
+		int rowsUpdated = statement.executeUpdate();
+		if (rowsUpdated > 0) {
+			System.out.println("An existing user was updated successfully!");
+		}
+		statement.close();
+
+		return entityToBeUpdated;
 		
-		
-		
-		return entityToUpdate;
 	}
 		
 	public long getNextFreeId() throws SQLException {
@@ -100,16 +114,17 @@ public class EntregaDAO {
 	}
 
 	public boolean delete(int numeroPedido) throws SQLException {
-		EntregaEntity entity = getEntrega(numeroPedido);
-		String sql = "delete from entrega where id = " + entity.getId();
+		String sql = "delete from entrega where numeroPedido = ?";
 		
-		Statement stm = conn.createStatement();
-		ResultSet rs = stm.executeQuery(sql);
+		PreparedStatement pstm;
+		pstm = conn.prepareStatement(sql);
+		pstm.setInt(1, numeroPedido);
+		int numberRows = pstm.executeUpdate();
 		
-		if (rs != null){
+		if (numberRows > 0)
 			return true;
-		}
 		return false;
+		
 	}
 	
 
